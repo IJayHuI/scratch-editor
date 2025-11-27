@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import MenuBarMenu from './menu-bar-menu.jsx';
-import {MenuSection} from '../menu/menu.jsx';
 import MenuItemContainer from '../../containers/menu-item.jsx';
 import UserAvatar from './user-avatar.jsx';
 import dropdownCaret from './dropdown-caret.svg';
@@ -24,13 +23,10 @@ const AccountNavComponent = ({
     menuBarMenuClassName,
     onClick,
     onClose,
-    onLogOut,
     profileUrl,
     myStuffUrl,
     avatarUrl,
     myClassesUrl,
-    myClassUrl,
-    accountSettingsUrl,
     username
 }) => (
     <React.Fragment>
@@ -65,15 +61,13 @@ const AccountNavComponent = ({
             place={isRtl ? 'right' : 'left'}
             onRequestClose={onClose}
         >
-            {profileUrl ? (
-                <MenuItemContainer href={profileUrl}>
-                    <FormattedMessage
-                        defaultMessage="Profile"
-                        description="Text to link to my user profile, in the account navigation menu"
-                        id="gui.accountMenu.profile"
-                    />
-                </MenuItemContainer>
-            ) : null}
+            <MenuItemContainer href={profileUrl}>
+                <FormattedMessage
+                    defaultMessage="Profile"
+                    description="Text to link to my user profile, in the account navigation menu"
+                    id="gui.accountMenu.profile"
+                />
+            </MenuItemContainer>
 
             {myStuffUrl ? (
                 <MenuItemContainer href={myStuffUrl}>
@@ -94,38 +88,6 @@ const AccountNavComponent = ({
                     />
                 </MenuItemContainer>
             ) : null}
-
-            {myClassUrl ? (
-                <MenuItemContainer href={myClassUrl}>
-                    <FormattedMessage
-                        defaultMessage="My Class"
-                        description="Text to link to my class (if I am a student), in the account navigation menu"
-                        id="gui.accountMenu.myClass"
-                    />
-                </MenuItemContainer>
-            ) : null}
-
-            {accountSettingsUrl ? (
-                <MenuItemContainer href={accountSettingsUrl}>
-                    <FormattedMessage
-                        defaultMessage="Account settings"
-                        description="Text to link to my account settings, in the account navigation menu"
-                        id="gui.accountMenu.accountSettings"
-                    />
-                </MenuItemContainer>
-            ) : null}
-
-            {onLogOut ? (
-                <MenuSection>
-                    <MenuItemContainer onClick={onLogOut}>
-                        <FormattedMessage
-                            defaultMessage="Sign out"
-                            description="Text to link to sign out, in the account navigation menu"
-                            id="gui.accountMenu.signOut"
-                        />
-                    </MenuItemContainer>
-                </MenuSection>
-            ) : null}
         </MenuBarMenu>
     </React.Fragment>
 );
@@ -140,16 +102,12 @@ AccountNavComponent.propTypes = {
 
     onClick: PropTypes.func,
     onClose: PropTypes.func,
-    onLogOut: PropTypes.func,
 
     username: PropTypes.string,
 
     avatarUrl: PropTypes.string,
     myStuffUrl: PropTypes.string,
-    profileUrl: PropTypes.string,
     myClassesUrl: PropTypes.string,
-    myClassUrl: PropTypes.string,
-    accountSettingsUrl: PropTypes.string
 };
 
 export default AccountNavComponent;

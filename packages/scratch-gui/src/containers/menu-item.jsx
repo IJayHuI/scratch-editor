@@ -12,7 +12,11 @@ class MenuItem extends React.Component {
         ]);
     }
     navigateToHref () {
-        if (this.props.href) window.location.href = this.props.href;
+        if (this.props.href) window.location.href = `${
+            window.location.hostname === "localhost"
+                ? "http://localhost:5173"
+                : "https://blockcode.com.cn"
+        }${this.props.href}`;
     }
     render () {
         const {

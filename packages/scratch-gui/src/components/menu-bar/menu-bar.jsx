@@ -12,12 +12,8 @@ import VM from '@scratch/scratch-vm';
 
 import Box from '../box/box.jsx';
 import Button from '../button/button.jsx';
-import CommunityButton from './community-button.jsx';
-import ShareButton from './share-button.jsx';
 import {ComingSoonTooltip} from '../coming-soon/coming-soon.jsx';
-import Divider from '../divider/divider.jsx';
 import SaveStatus from './save-status.jsx';
-import ProjectWatcher from '../../containers/project-watcher.jsx';
 import MenuBarMenu from './menu-bar-menu.jsx';
 import {MenuItem, MenuSection} from '../menu/menu.jsx';
 import ProjectTitleInput from './project-title-input.jsx';
@@ -29,7 +25,6 @@ import TurboMode from '../../containers/turbo-mode.jsx';
 import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
-import {setPlayer} from '../../reducers/mode';
 import {
     isTimeTravel220022BC,
     isTimeTravel1920,
@@ -60,9 +55,6 @@ import {
     openEditMenu,
     closeEditMenu,
     editMenuOpen,
-    openLoginMenu,
-    closeLoginMenu,
-    loginMenuOpen,
     openModeMenu,
     closeModeMenu,
     modeMenuOpen,
@@ -172,8 +164,6 @@ class MenuBar extends React.Component {
             'handleClickRemix',
             'handleClickSave',
             'handleClickSaveAsCopy',
-            'handleClickSeeCommunity',
-            'handleClickShare',
             'handleSetMode',
             'handleKeyPress',
             'handleRestoreOption',
@@ -213,27 +203,6 @@ class MenuBar extends React.Component {
     handleClickSaveAsCopy () {
         this.props.onClickSaveAsCopy();
         this.props.onRequestCloseFile();
-    }
-    handleClickSeeCommunity (waitForUpdate) {
-        if (this.props.shouldSaveBeforeTransition()) {
-            this.props.autoUpdateProject(); // save before transitioning to project page
-            waitForUpdate(true); // queue the transition to project page
-        } else {
-            waitForUpdate(false); // immediately transition to project page
-        }
-    }
-    handleClickShare (waitForUpdate) {
-        if (!this.props.isShared) {
-            if (this.props.canShare) { // save before transitioning to project page
-                this.props.onShare();
-            }
-            if (this.props.canSave) { // save before transitioning to project page
-                this.props.autoUpdateProject();
-                waitForUpdate(true); // queue the transition to project page
-            } else {
-                waitForUpdate(false); // immediately transition to project page
-            }
-        }
     }
     handleSetMode (mode) {
         return () => {
@@ -633,58 +602,6 @@ class MenuBar extends React.Component {
                             username={this.props.authorUsername}
                         />
                     ) : null)}
-                    <div className={classNames(styles.menuBarItem)}>
-                        {this.props.canShare ? (
-                            (this.props.isShowingProject || this.props.isUpdating) && (
-                                <ProjectWatcher onDoneUpdating={this.props.onSeeCommunity}>
-                                    {
-                                        waitForUpdate => (
-                                            <ShareButton
-                                                className={styles.menuBarButton}
-                                                isShared={this.props.isShared}
-                                                /* eslint-disable react/jsx-no-bind */
-                                                onClick={() => {
-                                                    this.handleClickShare(waitForUpdate);
-                                                }}
-                                                /* eslint-enable react/jsx-no-bind */
-                                            />
-                                        )
-                                    }
-                                </ProjectWatcher>
-                            )
-                        ) : (
-                            this.props.showComingSoon ? (
-                                <MenuBarItemTooltip id="share-button">
-                                    <ShareButton className={styles.menuBarButton} />
-                                </MenuBarItemTooltip>
-                            ) : []
-                        )}
-                        {this.props.canRemix ? remixButton : []}
-                    </div>
-                    <div className={classNames(styles.menuBarItem, styles.communityButtonWrapper)}>
-                        {this.props.enableCommunity ? (
-                            (this.props.isShowingProject || this.props.isUpdating) && (
-                                <ProjectWatcher onDoneUpdating={this.props.onSeeCommunity}>
-                                    {
-                                        waitForUpdate => (
-                                            <CommunityButton
-                                                className={styles.menuBarButton}
-                                                /* eslint-disable react/jsx-no-bind */
-                                                onClick={() => {
-                                                    this.handleClickSeeCommunity(waitForUpdate);
-                                                }}
-                                                /* eslint-enable react/jsx-no-bind */
-                                            />
-                                        )
-                                    }
-                                </ProjectWatcher>
-                            )
-                        ) : (this.props.showComingSoon ? (
-                            <MenuBarItemTooltip id="community-button">
-                                <CommunityButton className={styles.menuBarButton} />
-                            </MenuBarItemTooltip>
-                        ) : [])}
-                    </div>
                 </div>
 
                 {/* show the proper UI in the account menu, given whether the user is
@@ -700,23 +617,6 @@ class MenuBar extends React.Component {
                         this.props.username ? (
                             // ************ user is logged in ************
                             <React.Fragment>
-                                {menuOpts.myStuffUrl ? (
-                                    <a href={menuOpts.myStuffUrl}>
-                                        <div
-                                            className={classNames(
-                                                styles.menuBarItem,
-                                                styles.hoverable,
-                                                styles.mystuffButton
-                                            )}
-                                        >
-                                            <img
-                                                className={styles.mystuffIcon}
-                                                src={mystuffIcon}
-                                            />
-                                        </div>
-                                    </a>
-                                ) : null}
-
                                 <AccountNav
                                     className={classNames(
                                         styles.menuBarItem,
@@ -731,7 +631,6 @@ class MenuBar extends React.Component {
 
                                     onClick={this.props.onClickAccount}
                                     onClose={this.props.onRequestCloseAccount}
-                                    onLogOut={menuOpts.canLogout ? this.props.onLogOut : null}
 
                                     username={this.props.username}
 
@@ -823,7 +722,6 @@ MenuBar.propTypes = {
     confirmReadyToReplaceProject: PropTypes.func,
     currentLocale: PropTypes.string.isRequired,
     editMenuOpen: PropTypes.bool,
-    enableCommunity: PropTypes.bool,
     fileMenuOpen: PropTypes.bool,
     intl: intlShape,
     isRtl: PropTypes.bool,
@@ -832,7 +730,6 @@ MenuBar.propTypes = {
     isTotallyNormal: PropTypes.bool,
     isUpdating: PropTypes.bool,
     locale: PropTypes.string.isRequired,
-    loginMenuOpen: PropTypes.bool,
     logo: PropTypes.string,
     mode1920: PropTypes.bool,
     mode1990: PropTypes.bool,
@@ -852,7 +749,6 @@ MenuBar.propTypes = {
     onClickAccount: PropTypes.func,
     onClickEdit: PropTypes.func,
     onClickFile: PropTypes.func,
-    onClickLogin: PropTypes.func,
     onClickLogo: PropTypes.func,
     onClickMode: PropTypes.func,
     onClickNew: PropTypes.func,
@@ -860,25 +756,19 @@ MenuBar.propTypes = {
     onClickSave: PropTypes.func,
     onClickSaveAsCopy: PropTypes.func,
     onClickSettings: PropTypes.func,
-    onLogOut: PropTypes.func,
     onOpenRegistration: PropTypes.func,
     onProjectTelemetryEvent: PropTypes.func,
     onRequestCloseAbout: PropTypes.func,
     onRequestCloseAccount: PropTypes.func,
     onRequestCloseEdit: PropTypes.func,
     onRequestCloseFile: PropTypes.func,
-    onRequestCloseLogin: PropTypes.func,
     onRequestCloseMode: PropTypes.func,
     onRequestCloseSettings: PropTypes.func,
     onRequestOpenAbout: PropTypes.func,
-    onSeeCommunity: PropTypes.func,
     onSetTimeTravelMode: PropTypes.func,
-    onShare: PropTypes.func,
     onStartSelectingFileUpload: PropTypes.func,
-    onToggleLoginOpen: PropTypes.func,
     platform: PropTypes.oneOf(Object.keys(PLATFORM)),
     projectTitle: PropTypes.string,
-    renderLogin: PropTypes.func,
     settingsMenuOpen: PropTypes.bool,
     shouldSaveBeforeTransition: PropTypes.func,
     showComingSoon: PropTypes.bool,
@@ -911,7 +801,6 @@ const mapStateToProps = (state, ownProps) => {
         isUpdating: getIsUpdating(loadingState),
         isShowingProject: getIsShowingProject(loadingState),
         locale: state.locales.locale,
-        loginMenuOpen: loginMenuOpen(state),
         modeMenuOpen: modeMenuOpen(state),
         projectTitle: state.scratchGui.projectTitle,
         settingsMenuOpen: settingsMenuOpen(state),
@@ -933,16 +822,10 @@ const mapStateToProps = (state, ownProps) => {
         accountMenuOptions: ownProps.accountMenuOptions ?? {
             canHaveSession: sessionExists ?? false,
 
-            canRegister: true,
-            canLogin: true,
-            canLogout: true,
-
             avatarUrl: user?.thumbnailUrl,
-            myStuffUrl: '/mystuff/',
-            profileUrl: user && `/users/${user.username}`,
-            myClassesUrl: permissions?.educator ? '/educators/classes/' : null,
-            myClassUrl: user && permissions?.student ? `/classes/${user.classroomId}/` : null,
-            accountSettingsUrl: '/accounts/settings/'
+            myStuffUrl: '/file/',
+            profileUrl: user && `/profiles/`,
+            myClassesUrl: permissions?.educator ? '/class/' : null,
         }
     };
 };
@@ -955,8 +838,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     onRequestCloseFile: () => dispatch(closeFileMenu()),
     onClickEdit: () => dispatch(openEditMenu()),
     onRequestCloseEdit: () => dispatch(closeEditMenu()),
-    onClickLogin: ownProps.onClickLogin ?? (() => dispatch(openLoginMenu())),
-    onRequestCloseLogin: () => dispatch(closeLoginMenu()),
     onClickMode: () => dispatch(openModeMenu()),
     onRequestCloseMode: () => dispatch(closeModeMenu()),
     onRequestOpenAbout: () => dispatch(openAboutMenu()),
@@ -967,7 +848,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     onClickRemix: () => dispatch(remixProject()),
     onClickSave: () => dispatch(manualUpdateProject()),
     onClickSaveAsCopy: () => dispatch(saveProjectAsCopy()),
-    onSeeCommunity: ownProps.onSeeCommunity ?? (() => dispatch(setPlayer(true))),
     onSetTimeTravelMode: mode => dispatch(setTimeTravel(mode))
 });
 
