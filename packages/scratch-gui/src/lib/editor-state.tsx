@@ -1,5 +1,6 @@
 import {createStore, combineReducers, compose, Store} from 'redux';
 import localesReducer, {initLocale, localesInitialState} from '../reducers/locales';
+import sessionReducer, {sessionInitialState} from '../reducers/session'; 
 import locales from 'scratch-l10n';
 import {detectLocale} from './detect-locale';
 import {GUIConfig} from '../gui-config';
@@ -61,8 +62,8 @@ export class EditorState {
         if (params.localesOnly) {
             // Used for instantiating minimal state for the unsupported
             // browser modal
-            reducers = {locales: localesReducer};
-            initialState = {locales: initializedLocales};
+            reducers = {locales: localesReducer, session: sessionReducer};
+            initialState = {locales: initializedLocales, session: sessionInitialState};
             enhancer = composeEnhancers();
         } else {
             // You are right, this is gross. But it's necessary to avoid
@@ -100,11 +101,13 @@ export class EditorState {
             reducers = {
                 locales: localesReducer,
                 scratchGui: guiReducer,
-                scratchPaint: ScratchPaintReducer
+                scratchPaint: ScratchPaintReducer,
+                session: sessionReducer
             };
             initialState = {
                 locales: initializedLocales,
-                scratchGui: initializedGui
+                scratchGui: initializedGui,
+                session: sessionInitialState
             };
             enhancer = composeEnhancers(guiMiddleware);
         }

@@ -36,7 +36,7 @@ export default (appTarget) => {
     // note that redux's 'compose' function is just being used as a general utility to make
     // the hierarchy of HOC constructor calls clearer here; it has nothing to do with redux's
     // ability to compose reducers.
-    const WrappedGui = compose(AuthHOC, AppStateHOC, HashParserHOC)(GUI);
+    const WrappedGui = compose(AppStateHOC, AuthHOC, HashParserHOC)(GUI);
 
     // TODO a hack for testing the backpack, allow backpack host to be set by url param
     const backpackHostMatches = window.location.href.match(

@@ -23,7 +23,6 @@ import {MenuItem, MenuSection} from '../menu/menu.jsx';
 import ProjectTitleInput from './project-title-input.jsx';
 import AuthorInfo from './author-info.jsx';
 import AccountNav from '../../components/menu-bar/account-nav.jsx';
-import LoginDropdown from './login-dropdown.jsx';
 import SB3Downloader from '../../containers/sb3-downloader.jsx';
 import DeletionRestorer from '../../containers/deletion-restorer.jsx';
 import TurboMode from '../../containers/turbo-mode.jsx';
@@ -747,49 +746,7 @@ class MenuBar extends React.Component {
                         ) : (
                             // ********* user not logged in, but a session exists
                             // ********* so they can choose to log in
-                            <React.Fragment>
-                                {menuOpts.canRegister ? (
-                                    <div
-                                        className={classNames(
-                                            styles.menuBarItem,
-                                            styles.hoverable
-                                        )}
-                                        key="join"
-                                        onClick={this.props.onOpenRegistration}
-                                    >
-                                        <FormattedMessage
-                                            defaultMessage="Join Scratch"
-                                            description="Link for creating a Scratch account"
-                                            id="gui.menuBar.joinScratch"
-                                        />
-                                    </div>
-                                ) : null}
-
-                                {menuOpts.canLogin ? (
-                                    <div
-                                        className={classNames(
-                                            styles.menuBarItem,
-                                            styles.hoverable
-                                        )}
-                                        key="login"
-                                        onMouseUp={this.props.onClickLogin}
-                                        onClick={this.props.onClickLogin}
-                                    >
-                                        <FormattedMessage
-                                            defaultMessage="Sign in"
-                                            description="Link for signing in to your Scratch account"
-                                            id="gui.menuBar.signIn"
-                                        />
-                                        <LoginDropdown
-                                            className={classNames(styles.menuBarMenu)}
-                                            isOpen={this.props.loginMenuOpen}
-                                            isRtl={this.props.isRtl}
-                                            renderLogin={this.props.renderLogin}
-                                            onClose={this.props.onRequestCloseLogin}
-                                        />
-                                    </div>
-                                ) : null}
-                            </React.Fragment>
+                            <div>没有登录选项</div>
                         )
                     ) : (
                         // ******** no login session is available, so don't show login stuff
