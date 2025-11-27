@@ -1,4 +1,5 @@
 import {ScratchStorage, Asset} from 'scratch-storage';
+import { supabase } from './supabase';
 
 import defaultProject from './default-project';
 import {GUIStorage, TranslatorFunction} from '../gui-config';
@@ -86,29 +87,89 @@ export class LegacyStorage implements GUIStorage {
         ));
     }
 
-    private addOfficialScratchWebStores (storage: ScratchStorage) {
-        storage.addWebStore(
-            [storage.AssetType.Project],
-            this.getProjectGetConfig.bind(this),
-            this.getProjectCreateConfig.bind(this),
-            this.getProjectUpdateConfig.bind(this)
-        );
+    private addOfficialScratchWebStores (storage: ScratchStorage) {  
+        // 为项目使用自定义加载器  
+        const originalLoad = storage.load.bind(storage);  
+        storage.load = (assetType, assetId, dataFormat) => {
+            if (assetType === storage.AssetType.Project) {
+                return this.loadProjectFromSupabase(assetId.toString());
+            }
+            return originalLoad(assetType, assetId, dataFormat);
+        };  
+          
+        // 添加占位符URL配置  
+        storage.addWebStore(  
+            [storage.AssetType.Project],  
+            () => 'supabase://projects',  
+            this.getProjectCreateConfig.bind(this),  
+            this.getProjectUpdateConfig.bind(this)  
+        );  
+          
+        // 保持其他存储不变  
+        storage.addWebStore(  
+            [storage.AssetType.ImageVector, storage.AssetType.ImageBitmap, storage.AssetType.Sound],  
+            this.getAssetGetConfig.bind(this),  
+            this.getAssetCreateConfig.bind(this),  
+            this.getAssetCreateConfig.bind(this)  
+        );  
+          
+        storage.addWebStore(  
+            [storage.AssetType.Sound],  
+            asset => `static/extension-assets/scratch3_music/${asset.assetId}.${asset.dataFormat}`  
+        );  
+    }  
 
-        storage.addWebStore(
-            [storage.AssetType.ImageVector, storage.AssetType.ImageBitmap, storage.AssetType.Sound],
-            this.getAssetGetConfig.bind(this),
-            // We set both the create and update configs to the same method because
-            // storage assumes it should update if there is an assetId, but the
-            // asset store uses the assetId as part of the create URI.
-            this.getAssetCreateConfig.bind(this),
-            this.getAssetCreateConfig.bind(this)
-        );
+    private async loadProjectFromSupabase(assetId: string) {  
+        try {
+            // 获取当前会话
+            const { data: sessionData } = await supabase.auth.getSession();
+            // 查询文件元数据
+            const { data: fileData, error: errorData } = await supabase
+                .from("files")
+                .select("*")
+                .eq("id", assetId)
+                .single();
+            if (errorData || !fileData) {
+                throw new Error(
+                    `文件未找到: ${errorData?.message || "未知错误"}`,
+                );
+            }
+            // 检测是否为本人项目
+            const isOwner = sessionData?.session?.user?.id === fileData.user_id;
+            if (isOwner) localStorage.removeItem("read-only");
+            else localStorage.setItem("read-only", "true");
+            // 创建签名URL
+            const { data: urlData, error: urlError } = await supabase.storage
+                .from("files")
+                .createSignedUrl(fileData.file_path, 60 * 60);
+            if (urlError || !urlData?.signedUrl) {
+                throw new Error(
+                    `无法创建签名URL: ${urlError?.message || "未知错误"}`,
+                );
+            }
+            // 下载文件
+            const response = await fetch(urlData?.signedUrl);
+            if (!response.ok) {
+                throw new Error(`下载失败: ${response.statusText}`);
+            }
+            // 直接返回ArrayBuffer，让VM处理解压
+            const arrayBuffer = await response.arrayBuffer();
+            // 创建Asset对象
+            const asset = this.scratchStorage.createAsset(
+                this.scratchStorage.AssetType.Project,
+                this.scratchStorage.DataFormat.SB3,
+                new Uint8Array(arrayBuffer),
+                assetId,
+                true,
+            );
 
-        storage.addWebStore(
-            [storage.AssetType.Sound],
-            asset => `static/extension-assets/scratch3_music/${asset.assetId}.${asset.dataFormat}`
-        );
-    }
+            (asset as any).projectName = fileData.file_name 
+            return asset;
+        } catch (error) {  
+            console.error('从Supabase加载项目失败:', error);  
+            throw error;  
+        }  
+    }  
 
     private getProjectGetConfig (projectAsset) {
         const path = `${this.projectHost}/${projectAsset.assetId}`;

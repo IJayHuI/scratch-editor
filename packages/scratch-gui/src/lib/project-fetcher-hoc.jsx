@@ -16,6 +16,7 @@ import {
     projectError,
     setProjectId
 } from '../reducers/project-state';
+import { setProjectTitle } from '../reducers/project-title';
 import {
     activateTab,
     BLOCKS_TAB_INDEX
@@ -82,10 +83,18 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             const storage = this.props.storage.scratchStorage;
 
             return storage
-                .load(storage.AssetType.Project, projectId, storage.DataFormat.JSON)
+                .load(storage.AssetType.Project, projectId, storage.DataFormat.SB3)
                 .then(projectAsset => {
                     if (projectAsset) {
-                        this.props.onFetchedProjectData(projectAsset.data, loadingState);
+                        const projectName = projectAsset.projectName;
+                        // 如果有项目名称，设置项目标题
+                        if (projectName) {
+                            this.props.setProjectTitle(projectName);
+                        }
+                        this.props.onFetchedProjectData(
+                            projectAsset.data,
+                            loadingState,
+                        );
                     } else {
                         // Treat failure to load as an error
                         // Throw to be caught by catch later on
@@ -113,6 +122,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                 projectToken,
                 reduxProjectId,
                 setProjectId: setProjectIdProp,
+                setProjectTitle: setProjectTitleProp,
                  
                 isFetchingWithId: isFetchingWithIdProp,
                 ...componentProps
@@ -143,7 +153,8 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         projectToken: PropTypes.string,
         projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         reduxProjectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-        setProjectId: PropTypes.func
+        setProjectId: PropTypes.func,
+        setProjectTitle: PropTypes.func
     };
     ProjectFetcherComponent.defaultProps = {
         assetHost: 'https://assets.scratch.mit.edu',
@@ -165,6 +176,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         onFetchedProjectData: (projectData, loadingState) =>
             dispatch(onFetchedProjectData(projectData, loadingState)),
         setProjectId: projectId => dispatch(setProjectId(projectId)),
+        setProjectTitle: title => dispatch(setProjectTitle(title)),
         onProjectUnchanged: () => dispatch(setProjectUnchanged())
     });
     // Allow incoming props to override redux-provided props. Used to mock in tests.
