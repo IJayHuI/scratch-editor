@@ -6,5 +6,4 @@ const SUPABASE_ANON_KEY =
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 可选：导出配置常量供其他地方使用
 export { SUPABASE_URL, SUPABASE_ANON_KEY };
