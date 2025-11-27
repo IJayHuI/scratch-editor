@@ -4,6 +4,7 @@ const initialState = {
     session: {
         user: {
             username: null,
+            nickName: null,
             thumbnailUrl: null,
             classroomId: null,
         },

@@ -804,7 +804,7 @@ const mapStateToProps = (state, ownProps) => {
         modeMenuOpen: modeMenuOpen(state),
         projectTitle: state.scratchGui.projectTitle,
         settingsMenuOpen: settingsMenuOpen(state),
-        username: ownProps.username ?? (user ? user.username : null),
+        username: user ? (user.nickName || user.username) : null,
         userIsEducator: permissions && permissions.educator,
         vm: state.scratchGui.vm,
         mode220022BC: isTimeTravel220022BC(state),

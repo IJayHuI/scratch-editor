@@ -57,9 +57,8 @@ const AuthHOC = function (WrappedComponent) {
             const sessionState = {
                 session: {
                     user: {
-                        username:
-                            profile.data.nick_name ||
-                            data.session.user.email.split("@")[0], // 用邮箱前缀做 username
+                        username: data.session.user.email.split("@")[0], // 用邮箱前缀做 username
+                        nickName: profile.data.nick_name,
                         thumbnailUrl: null, // Supabase avatar 或 null
                         classroomId: null, // 可以置 null
                     },
