@@ -2,6 +2,7 @@ import {applyMiddleware, compose, combineReducers} from 'redux';
 import alertsReducer, {alertsInitialState} from './alerts';
 import assetDragReducer, {assetDragInitialState} from './asset-drag';
 import cardsReducer, {cardsInitialState} from './cards';
+import chatPanelReducer, {chatPanelInitialState} from './chat-panel';
 import colorPickerReducer, {colorPickerInitialState} from './color-picker';
 import connectionModalReducer, {connectionModalInitialState} from './connection-modal';
 import customProceduresReducer, {customProceduresInitialState} from './custom-procedures';
@@ -41,6 +42,7 @@ const buildInitialState = (config: GUIConfig) => ({
     assetDrag: assetDragInitialState,
     blockDrag: blockDragInitialState,
     cards: cardsInitialState,
+    chatPanel: chatPanelInitialState,
     colorPicker: colorPickerInitialState,
     config,
     connectionModal: connectionModalInitialState,
@@ -146,6 +148,7 @@ const configReducer = function (state?: GUIConfig | null) {
 };
 
 const guiReducer = combineReducers({
+    chatPanel: chatPanelReducer,
     alerts: alertsReducer,
     assetDrag: assetDragReducer,
     blockDrag: blockDragReducer,

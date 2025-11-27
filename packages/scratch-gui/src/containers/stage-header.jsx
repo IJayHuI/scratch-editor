@@ -5,6 +5,7 @@ import VM from '@scratch/scratch-vm';
 import {STAGE_SIZE_MODES} from '../lib/layout-constants';
 import {setStageSize} from '../reducers/stage-size';
 import {setFullScreen} from '../reducers/mode';
+import { setChatPanel } from '../reducers/chat-panel';
 
 import {connect} from 'react-redux';
 
@@ -48,21 +49,31 @@ StageHeader.propTypes = {
     onSetStageUnFull: PropTypes.func.isRequired,
     showBranding: PropTypes.bool,
     stageSizeMode: PropTypes.oneOf(Object.keys(STAGE_SIZE_MODES)),
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
+    chatPanel: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = state => ({
     stageSizeMode: state.scratchGui.stageSize.stageSize,
     showBranding: state.scratchGui.mode.showBranding,
     isFullScreen: state.scratchGui.mode.isFullScreen,
-    isPlayerOnly: state.scratchGui.mode.isPlayerOnly
+    isPlayerOnly: state.scratchGui.mode.isPlayerOnly,
+    chatPanel: state.scratchGui.chatPanel.chatPanel
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     onSetStageLarge: () => dispatch(setStageSize(STAGE_SIZE_MODES.large)),
     onSetStageSmall: () => dispatch(setStageSize(STAGE_SIZE_MODES.small)),
     onSetStageFull: () => dispatch(setFullScreen(true)),
-    onSetStageUnFull: () => dispatch(setFullScreen(false))
+    onSetStageUnFull: () => dispatch(setFullScreen(false)),
+    onSetChatPanelOpen: () => {
+        dispatch(setChatPanel(true));
+        dispatch(setStageSize(STAGE_SIZE_MODES.small));
+    },
+    onSetChatPanelClose: () => {
+        dispatch(setChatPanel(false));
+        dispatch(setStageSize(STAGE_SIZE_MODES.large));
+    },
 });
 
 export default connect(

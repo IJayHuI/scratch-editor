@@ -21,6 +21,7 @@ import MenuBar from '../menu-bar/menu-bar.jsx';
 import CostumeLibrary from '../../containers/costume-library.jsx';
 import BackdropLibrary from '../../containers/backdrop-library.jsx';
 import Watermark from '../../containers/watermark.jsx';
+import ChatPanel from '../../containers/chat-panel.jsx';
 
 import Backpack from '../../containers/backpack.jsx';
 import ExtensionsButton from '../extension-button/extension-button.jsx';
@@ -136,6 +137,7 @@ const GUIComponent = props => {
         userOwnsProject,
         hideTutorialProjects,
         vm,
+        chatPanel,
         ...componentProps
     } = omit(props, 'dispatch', 'setPlatform');
     if (children) {
@@ -410,6 +412,7 @@ const GUIComponent = props => {
                                 isRtl={isRtl}
                                 stageSize={stageSize}
                                 vm={vm}
+                                chatPanel={chatPanel}
                             />
                             <Box className={styles.targetWrapper}>
                                 <TargetPane
@@ -420,6 +423,7 @@ const GUIComponent = props => {
                                 />
                             </Box>
                         </Box>
+                        {chatPanel ? <Box><ChatPanel /></Box> : null}
                     </Box>
                 </Box>
                 <DragLayer />

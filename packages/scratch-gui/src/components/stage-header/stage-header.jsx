@@ -69,7 +69,10 @@ const StageHeaderComponent = function (props) {
         projectId,
         showBranding,
         stageSizeMode,
-        vm
+        vm,
+        chatPanel,
+        onSetChatPanelOpen,
+        onSetChatPanelClose,
     } = props;
     const intl = useIntl();
 
@@ -169,11 +172,15 @@ const StageHeaderComponent = function (props) {
                         <div className={styles.rightSection}>
                             {manuallySaveThumbnails && (
                                 <Button
-                                    aria-label={intl.formatMessage(messages.setThumbnail)}
+                                    aria-label={intl.formatMessage(
+                                        messages.setThumbnail,
+                                    )}
                                     className={styles.setThumbnailButton}
                                     onClick={onUpdateThumbnail}
                                 >
-                                    <FormattedMessage {...messages.setThumbnail} />
+                                    <FormattedMessage
+                                        {...messages.setThumbnail}
+                                    />
                                 </Button>
                             )}
                             <Button
@@ -181,12 +188,28 @@ const StageHeaderComponent = function (props) {
                                 onClick={onSetStageFull}
                             >
                                 <img
-                                    alt={intl.formatMessage(messages.fullStageSizeMessage)}
+                                    alt={intl.formatMessage(
+                                        messages.fullStageSizeMessage,
+                                    )}
                                     className={styles.stageButtonIcon}
                                     draggable={false}
                                     src={fullScreenIcon}
-                                    title={intl.formatMessage(messages.fullscreenControl)}
+                                    title={intl.formatMessage(
+                                        messages.fullscreenControl,
+                                    )}
                                 />
+                            </Button>
+                        </div>
+                        <div>
+                            <Button
+                                className={styles.stageButton}
+                                onClick={
+                                    chatPanel
+                                        ? onSetChatPanelClose
+                                        : onSetChatPanelOpen
+                                }
+                            >
+                                AI
                             </Button>
                         </div>
                     </div>
@@ -218,6 +241,7 @@ StageHeaderComponent.propTypes = {
     showBranding: PropTypes.bool.isRequired,
     stageSizeMode: PropTypes.oneOf(Object.keys(STAGE_SIZE_MODES)),
     vm: PropTypes.instanceOf(VM).isRequired,
+    chatPanel: PropTypes.bool.isRequired,
 };
 
 StageHeaderComponent.defaultProps = {

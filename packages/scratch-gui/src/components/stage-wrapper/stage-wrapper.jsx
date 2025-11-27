@@ -20,7 +20,8 @@ const StageWrapperComponent = function (props) {
         manuallySaveThumbnails,
         onUpdateProjectThumbnail,
         stageSize,
-        vm
+        vm,
+        chatPanel
     } = props;
 
     return (
@@ -37,6 +38,7 @@ const StageWrapperComponent = function (props) {
                     onUpdateProjectThumbnail={onUpdateProjectThumbnail}
                     stageSize={stageSize}
                     vm={vm}
+                    chatPanel={chatPanel}
                 />
             </Box>
             <Box className={styles.stageCanvasWrapper}>
@@ -64,7 +66,8 @@ StageWrapperComponent.propTypes = {
     manuallySaveThumbnails: PropTypes.bool,
     onUpdateProjectThumbnail: PropTypes.func,
     stageSize: PropTypes.oneOf(Object.keys(STAGE_DISPLAY_SIZES)).isRequired,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
+    chatPanel: PropTypes.bool.isRequired
 };
 
 export default StageWrapperComponent;

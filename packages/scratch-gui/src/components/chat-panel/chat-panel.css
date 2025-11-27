@@ -1,0 +1,23 @@
+@import "../../css/units.css";
+@import "../../css/colors.css";
+
+.chat-panel {
+    background-clip: padding-box;
+    width: 400px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    /* For the add backdrop button */
+    flex-grow: 1;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: $ui-white;
+    color: $text-primary;
+    border-color: $ui-black-transparent;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom: 0;
+    border-top: 0;
+    transition: all 0.25s ease;
+}

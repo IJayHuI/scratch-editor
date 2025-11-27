@@ -144,7 +144,8 @@ GUI.propTypes = {
     userOwnsProject: PropTypes.bool,
     // TODO: Is this unused?
     hideTutorialProjects: PropTypes.bool,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
+    chatPanel: PropTypes.bool
 };
 
 GUI.defaultProps = {
@@ -184,7 +185,8 @@ const mapStateToProps = (state, ownProps) => {
         ),
         telemetryModalVisible: state.scratchGui.modals.telemetryModal,
         tipsLibraryVisible: state.scratchGui.modals.tipsLibrary,
-        vm: state.scratchGui.vm
+        vm: state.scratchGui.vm,
+        chatPanel: state.scratchGui.chatPanel.chatPanel
     };
 };
 
