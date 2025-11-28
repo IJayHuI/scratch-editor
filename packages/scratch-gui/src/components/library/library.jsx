@@ -15,7 +15,6 @@ import Filter from '../filter/filter.jsx';
 import TagButton from '../../containers/tag-button.jsx';
 import {legacyConfig} from '../../legacy-config';
 import Spinner from '../spinner/spinner.jsx';
-import {CATEGORIES} from '../../../src/lib/libraries/decks/index.jsx';
 import {getLocalStorageValue, setLocalStorageValue} from '../../lib/local-storage.js';
 
 import styles from './library.css';
@@ -39,28 +38,6 @@ const messages = defineMessages({
         description: 'Description for Face Sensing callout',
         // eslint-disable-next-line max-len
         defaultMessage: 'You can now use your face to control your projects, like making a sprite follow wherever your nose goes!'
-    },
-    // Strings here need to be defined statically
-    // https://formatjs.io/docs/getting-started/message-declaration/#pre-declaring-using-definemessage-for-later-consumption-less-recommended
-    [CATEGORIES.gettingStarted]: {
-        id: `gui.library.gettingStarted`,
-        defaultMessage: 'Getting Started',
-        description: 'Label for getting started category'
-    },
-    [CATEGORIES.basics]: {
-        id: `gui.library.basics`,
-        defaultMessage: 'Basics',
-        description: 'Label for basics category'
-    },
-    [CATEGORIES.intermediate]: {
-        id: `gui.library.intermediate`,
-        defaultMessage: 'Intermediate',
-        description: 'Label for intermediate category'
-    },
-    [CATEGORIES.prompts]: {
-        id: `gui.library.prompts`,
-        defaultMessage: 'Prompts',
-        description: 'Label for prompts category'
     }
 });
 

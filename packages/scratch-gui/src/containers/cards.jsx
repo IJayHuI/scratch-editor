@@ -18,20 +18,11 @@ import {
 } from '../reducers/modals';
 
 import CardsComponent from '../components/cards/cards.jsx';
-import {loadImageData} from '../lib/libraries/decks/translate-image.js';
 import {PLATFORM} from '../lib/platform.js';
 
 class Cards extends React.Component {
-    componentDidMount () {
-        if (this.props.locale !== 'en') {
-            loadImageData(this.props.locale, this.props.platform);
-        }
-    }
-    componentDidUpdate (prevProps) {
-        if (this.props.locale !== prevProps.locale) {
-            loadImageData(this.props.locale, this.props.platform);
-        }
-    }
+    componentDidMount () {}
+    componentDidUpdate (prevProps) {}
     render () {
         const props = {
             ...this.props,

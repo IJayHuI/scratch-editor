@@ -32,7 +32,6 @@ import vmStatusReducer, {vmStatusInitialState} from './vm-status';
 import workspaceMetricsReducer, {workspaceMetricsInitialState} from './workspace-metrics';
 import throttle from 'redux-throttle';
 
-import decks from '../lib/libraries/decks/index.jsx';
 import {GUIConfig} from '../gui-config';
 
 const guiMiddleware = compose(applyMiddleware(throttle(300, {leading: true, trailing: true})));
@@ -117,7 +116,6 @@ const initTutorialCard = function (currentState, deckId) {
         {
             cards: {
                 visible: true,
-                content: decks,
                 activeDeckId: deckId,
                 expanded: true,
                 step: 0,

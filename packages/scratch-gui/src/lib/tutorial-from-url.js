@@ -3,7 +3,6 @@
  * Utility function to detect tutorial id from query paramenter on the URL.
  */
 
-import tutorials from './libraries/decks/index.jsx';
 import analytics from './analytics';
 
 /**

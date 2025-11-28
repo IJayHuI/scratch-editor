@@ -4,7 +4,6 @@ import React from 'react';
 import {injectIntl, defineMessages} from 'react-intl';
 import intlShape from '../lib/intlShape.js';
 
-import decksLibraryContent from '../lib/libraries/decks/index.jsx';
 import tutorialTags from '../lib/libraries/tutorial-tags';
 
 import analytics from '../lib/analytics';

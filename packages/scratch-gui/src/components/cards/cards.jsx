@@ -15,9 +15,6 @@ import leftArrow from './icon--prev.svg';
 import helpIcon from '../../lib/assets/icon--tutorials.svg';
 import closeIcon from './icon--close.svg';
 
-import {translateVideo} from '../../lib/libraries/decks/translate-video.js';
-import {translateImage} from '../../lib/libraries/decks/translate-image.js';
-
 const CardHeader = ({onCloseCards, onShrinkExpandCards, onShowAll, totalSteps, step, expanded}) => (
     <div className={expanded ? styles.headerButtons : classNames(styles.headerButtons, styles.headerButtonsHidden)}>
         <div
@@ -404,44 +401,6 @@ const Cards = props => {
                             onShowAll={onShowAll}
                             onShrinkExpandCards={onShrinkExpandCards}
                         />
-                        <div className={expanded ? styles.stepBody : styles.hidden}>
-                            {steps[step].deckIds ? (
-                                <PreviewsStep
-                                    content={content}
-                                    deckIds={steps[step].deckIds}
-                                    onActivateDeckFactory={onActivateDeckFactory}
-                                    onShowAll={onShowAll}
-                                />
-                            ) : (
-                                steps[step].externalResources ? (
-                                    <PreviewExternalStep
-                                        externalResources={steps[step].externalResources}
-                                        onShowAll={onShowAll}
-                                    />
-                                ) :
-                                    steps[step].video ? (
-                                        showVideos ?
-                                            (
-                                                <VideoStep
-                                                    dragging={dragging}
-                                                    expanded={expanded}
-                                                    video={translateVideo(steps[step].video, locale)}
-                                                />
-                                            ) : (
-                                                <ImageStep
-                                                    image={content[activeDeckId].img}
-                                                    title={content[activeDeckId].name}
-                                                />
-                                            )
-                                    ) : (
-                                        <ImageStep
-                                            image={translateImage(steps[step].image, locale)}
-                                            title={steps[step].title}
-                                        />
-                                    )
-                            )}
-                            {steps[step].trackingPixel && steps[step].trackingPixel}
-                        </div>
                         <NextPrevButtons
                             expanded={expanded}
                             isRtl={isRtl}
