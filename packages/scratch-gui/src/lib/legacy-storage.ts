@@ -69,12 +69,8 @@ export class LegacyStorage implements GUIStorage {
         projectId: number,
         vmState: string,
         params: { originalId: string; isCopy: boolean; isRemix: boolean; title: string; }
-    ): Promise<{ id: string | number; }> {
-        if (!this.projectHost) {
-            return Promise.reject(new Error('Project host not set'));
-        }
-        // Haven't inlined the code here so that we can keep Git history on the implementation, just in case
-        return saveProjectToServer(this.projectHost, projectId, vmState, params);
+    ) {
+        return saveProjectToServer(projectId, vmState, params);
     }
 
     private cacheDefaultProject (storage: ScratchStorage) {
@@ -136,8 +132,6 @@ export class LegacyStorage implements GUIStorage {
             }
             // 检测是否为本人项目
             const isOwner = sessionData?.session?.user?.id === fileData.user_id;
-            if (isOwner) localStorage.removeItem("read-only");
-            else localStorage.setItem("read-only", "true");
             // 创建签名URL
             const { data: urlData, error: urlError } = await supabase.storage
                 .from("files")
@@ -163,7 +157,8 @@ export class LegacyStorage implements GUIStorage {
                 true,
             );
 
-            (asset as any).projectName = fileData.file_name 
+            (asset as any).isOwner = isOwner;
+            (asset as any).projectName = fileData.file_name;
             return asset;
         } catch (error) {  
             console.error('从Supabase加载项目失败:', error);  

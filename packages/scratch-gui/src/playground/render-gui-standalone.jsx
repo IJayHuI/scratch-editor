@@ -64,7 +64,6 @@ export default appTarget => {
             canEditTitle: true,
             platform: PLATFORM.DESKTOP,
             showTelemetryModal: true,
-            canSave: false,
             onTelemetryModalCancel: handleTelemetryModalCancel,
             onTelemetryModalOptIn: handleTelemetryModalOptIn,
             onTelemetryModalOptOut: handleTelemetryModalOptOut
@@ -75,7 +74,6 @@ export default appTarget => {
             backpackVisible: true,
             showComingSoon: true,
             backpackHost,
-            canSave: false,
             onClickLogo
         });
     }

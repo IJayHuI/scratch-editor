@@ -14,7 +14,8 @@ import {
     getIsShowingProject,
     onFetchedProjectData,
     projectError,
-    setProjectId
+    setProjectId,
+    setIsOwner
 } from '../reducers/project-state';
 import { setProjectTitle } from '../reducers/project-title';
 import {
@@ -87,10 +88,12 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                 .then(projectAsset => {
                     if (projectAsset) {
                         const projectName = projectAsset.projectName;
+                        const isOwner = projectAsset.isOwner;
                         // 如果有项目名称，设置项目标题
                         if (projectName) {
                             this.props.setProjectTitle(projectName);
                         }
+                        this.props.setIsOwner(isOwner);
                         this.props.onFetchedProjectData(
                             projectAsset.data,
                             loadingState,
@@ -108,7 +111,6 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         }
         render () {
             const {
-                 
                 assetHost,
                 intl,
                 isLoadingProject: isLoadingProjectProp,
@@ -121,9 +123,10 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                 projectId,
                 projectToken,
                 reduxProjectId,
+                setIsOwner: setIsOwnerProp,
                 setProjectId: setProjectIdProp,
                 setProjectTitle: setProjectTitleProp,
-                 
+
                 isFetchingWithId: isFetchingWithIdProp,
                 ...componentProps
             } = this.props;
@@ -153,6 +156,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         projectToken: PropTypes.string,
         projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         reduxProjectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        setIsOwner: PropTypes.func,
         setProjectId: PropTypes.func,
         setProjectTitle: PropTypes.func
     };
@@ -175,6 +179,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
         onError: error => dispatch(projectError(error)),
         onFetchedProjectData: (projectData, loadingState) =>
             dispatch(onFetchedProjectData(projectData, loadingState)),
+        setIsOwner: isOwner => dispatch(setIsOwner(isOwner)),
         setProjectId: projectId => dispatch(setProjectId(projectId)),
         setProjectTitle: title => dispatch(setProjectTitle(title)),
         onProjectUnchanged: () => dispatch(setProjectUnchanged())

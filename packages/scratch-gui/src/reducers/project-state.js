@@ -13,6 +13,7 @@ const DONE_UPDATING_BEFORE_COPY = 'scratch-gui/project-state/DONE_UPDATING_BEFOR
 const DONE_UPDATING_BEFORE_NEW = 'scratch-gui/project-state/DONE_UPDATING_BEFORE_NEW';
 const RETURN_TO_SHOWING = 'scratch-gui/project-state/RETURN_TO_SHOWING';
 const SET_PROJECT_ID = 'scratch-gui/project-state/SET_PROJECT_ID';
+const SET_IS_OWNER = 'scratch-gui/project-state/SET_IS_OWNER';
 const START_AUTO_UPDATING = 'scratch-gui/project-state/START_AUTO_UPDATING';
 const START_CREATING_NEW = 'scratch-gui/project-state/START_CREATING_NEW';
 const START_ERROR = 'scratch-gui/project-state/START_ERROR';
@@ -108,7 +109,8 @@ const initialState = {
     error: null,
     projectData: null,
     projectId: null,
-    loadingState: LoadingState.NOT_LOADED
+    loadingState: LoadingState.NOT_LOADED,
+    isOwner: false
 };
 
 const reducer = function (state, action) {
@@ -170,7 +172,8 @@ const reducer = function (state, action) {
         if (state.loadingState === LoadingState.REMIXING) {
             return Object.assign({}, state, {
                 loadingState: LoadingState.SHOWING_WITH_ID,
-                projectId: action.projectId
+                projectId: action.projectId,
+                isOwner: true
             });
         }
         return state;
@@ -258,6 +261,10 @@ const reducer = function (state, action) {
             });
         }
         return state;
+    case SET_IS_OWNER:
+        return Object.assign({}, state, {
+            isOwner: action.isOwner,
+        });
     case START_AUTO_UPDATING:
         if (state.loadingState === LoadingState.SHOWING_WITH_ID) {
             return Object.assign({}, state, {
@@ -470,6 +477,11 @@ const setProjectId = id => ({
     projectId: id
 });
 
+const setIsOwner = isOwner => ({
+    type: SET_IS_OWNER,
+    isOwner: isOwner
+})
+
 const requestNewProject = needSave => {
     if (needSave) return {type: START_UPDATING_BEFORE_CREATING_NEW};
     return {type: START_FETCHING_NEW};
@@ -537,5 +549,6 @@ export {
     requestNewProject,
     requestProjectUpload,
     saveProjectAsCopy,
-    setProjectId
+    setProjectId,
+    setIsOwner
 };

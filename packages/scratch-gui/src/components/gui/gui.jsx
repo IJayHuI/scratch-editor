@@ -543,11 +543,20 @@ GUIComponent.defaultProps = {
     useExternalPeripheralList: false
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     // This is the button's mode, as opposed to the actual current state
     blocksId: state.scratchGui.timeTravel.year.toString(),
     stageSizeMode: state.scratchGui.stageSize.stageSize,
-    theme: state.scratchGui.theme.theme
+    theme: state.scratchGui.theme.theme,
+    canSave:
+        state.scratchGui.projectState.isOwner &&
+        state.scratchGui.projectState.loadingState === "SHOWING_WITH_ID",
+    canCreateCopy:
+        state.scratchGui.projectState.isOwner &&
+        state.scratchGui.projectState.loadingState === "SHOWING_WITH_ID",
+    canRemix:
+        !state.scratchGui.projectState.isOwner &&
+        state.scratchGui.projectState.loadingState === "SHOWING_WITH_ID",
 });
 
 const mapDispatchToProps = dispatch => ({

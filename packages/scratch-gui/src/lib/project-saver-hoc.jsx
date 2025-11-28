@@ -34,6 +34,8 @@ import {
 import {GUIStoragePropType} from '../gui-config';
 import {getProjectThumbnail, storeProjectThumbnail} from './store-project-thumbnail';
 
+import { supabase } from './supabase';
+
 /**
  * Higher Order Component to provide behavior for saving projects.
  * @param {React.Component} WrappedComponent the component to add project saving functionality to
@@ -169,7 +171,9 @@ const ProjectSaverHOC = function (WrappedComponent) {
         }
         updateProjectToStorage () {
             this.props.onShowSavingAlert();
-            return this.storeProject(this.props.reduxProjectId)
+            return this.storeProject(this.props.reduxProjectId, {
+                title: this.props.reduxProjectTitle
+            })
                 .then(() => {
                     // there's an http response object available here, but we don't need to examine
                     // it, because there are no values contained in it that we care about
@@ -232,7 +236,7 @@ const ProjectSaverHOC = function (WrappedComponent) {
          * @param {?object} requestParams - object of params to add to request body
          * @param {?object} options - additional options for the store operation
          */
-        storeProject (projectId, requestParams, options) {
+        async storeProject (projectId, requestParams, options) {
             requestParams = requestParams || {};
             this.clearAutoSaveTimeout();
             // Serialize VM state now before embarking on
@@ -241,51 +245,35 @@ const ProjectSaverHOC = function (WrappedComponent) {
             // while in the process of saving a project (e.g. the
             // serialized project refers to a newer asset than what
             // we just finished saving).
-            const savedVMState = this.props.vm.toJSON();
-            const scratchStorage = this.props.storage.scratchStorage;
+            const savedVMState = await this.props.vm.saveProjectSb3();
 
-            const saveProject = this.props.onUpdateProjectData ||
-                ((id, vmState, params) => this.props.storage.saveProject(id, vmState, params));
-
-            return Promise.all(this.props.vm.assets
-                .filter(asset => !asset.clean)
-                .map(
-                    asset => scratchStorage.store(
-                        asset.assetType,
-                        asset.dataFormat,
-                        asset.data,
-                        asset.assetId
-                    ).then(response => {
-                        // Asset servers respond with {status: ok} for successful POSTs
-                        if (response.status !== 'ok') {
-                            // Errors include a `code` property, e.g. "Forbidden"
-                            return Promise.reject(response.code);
-                        }
-                        asset.clean = true;
-                    })
-                )
-            )
-                .then(() => saveProject(projectId, savedVMState, requestParams))
-                .then(response => {
+            return this.props.storage
+                .saveProject(projectId, savedVMState, requestParams)
+                .then(async (response) => {
                     this.props.onSetProjectUnchanged();
-                    const id = response.id.toString();
-                    if (this.props.onUpdateProjectThumbnail && id && (
-                        !this.props.manuallySaveThumbnails ||
-                        // Always save thumbnail on project creation
-                        options?.isCreatingProject)) {
-                        storeProjectThumbnail(this.props.vm, dataURI => {
-                            this.props.onUpdateProjectThumbnail(
-                                id,
-                                dataURItoBlob(dataURI)
-                            );
+                    const id = response?.id.toString();
+                    if (id) {
+                        storeProjectThumbnail(this.props.vm, async (dataURI) => {
+                            const { error: updateError } =
+                                await supabase.storage
+                                    .from("files")
+                                    .upload(
+                                        response.thumbnail_path,
+                                        dataURItoBlob(dataURI),
+                                        { upsert: true },
+                                    );
+                            if (updateError) {
+                                log.error(updateError);
+                                throw updateError;
+                            }
                         });
                     }
-                    this.reportTelemetryEvent('projectDidSave');
+                    this.reportTelemetryEvent("projectDidSave");
                     return response;
                 })
-                .catch(err => {
+                .catch((err) => {
                     log.error(err);
-                    throw err; // pass the error up the chain
+                    throw err;
                 });
         }
 
