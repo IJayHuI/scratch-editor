@@ -793,7 +793,7 @@ const mapStateToProps = (state, ownProps) => {
 
             avatarUrl: user?.thumbnailUrl,
             myStuffUrl: '/file/',
-            profileUrl: user && `/profiles/`,
+            profileUrl: user && `/profile/`,
             myClassesUrl: permissions?.educator ? '/class/' : null,
         }
     };
