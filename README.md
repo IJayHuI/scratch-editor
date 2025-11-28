@@ -1,51 +1,83 @@
-# scratch-editor: The Scratch Editor Monorepo
+# 🚀 BlockCode Scratch Editor
 
-If you'd like to use Scratch, please visit the [Scratch website](https://scratch.mit.edu/). You can build your own
-Scratch project by pressing "Create" on that website or by visiting <https://scratch.mit.edu/projects/editor/>.
+基于原版 [scratchfoundation/scratch-editor](https://github.com/scratchfoundation/scratch-editor)￼ 的二次开发项目，增加了账号系统、文件管理功能，并接入 Supabase 作为后端服务。
 
-This is a source code repository for the packages that make up the Scratch editor and a few additional support
-packages. Use this if you'd like to learn about how the Scratch editor works or to contribute to its development.
+本项目用于搭建一个可登录、可管理作品的 Scratch 在线编辑器，可结合 BlockCode 前端使用。
 
-## What's in this repository?
+## ✨ 功能特性
 
-The `packages` directory in this repository contains:
+### 🔐 账号系统（Supabase Auth）
+- Token 校验
+- Profile 同步（昵称、角色等）
 
-- `scratch-gui` provides the buttons, menus, and other elements that you interact with when creating and editing a
-  project. It's also the "glue" that brings most of the other modules together at runtime.
-- `scratch-render` draws backdrops, sprites, and clones on the stage.
-- `scratch-svg-renderer` processes SVG (vector) images for use with Scratch projects.
-- `scratch-vm` is the virtual machine that runs Scratch projects.
+### 🤖 AI 助手（DeepSeek 接入）
+- 集成 DeepSeek API，为用户提供实时 AI 辅助
+- 可用于项目搭建、疑难解答、生成积木块等
 
-_Please add to this list as more packages are migrated to the monorepo._
+### 🌐 在线持续编辑
+- 支持使用 token 自动登录到 Scratch Editor
 
-Each package has its own `README.md` file with more information about that package.
+## 📦 技术栈
 
-## Monorepo migration
+Layer	Technology
+前端	Scratch Editor（基于 React）
+认证	Supabase Auth
+存储	Supabase Storage
+数据库	Supabase Postgres
+云函数	Supabase Edge Functions
+作品系统	兼容 Scratch .sb3 文件格式
 
-### What's going on?
 
-We're migrating the Scratch editor packages into this monorepo. This will allow us to manage all the packages that
-make up the Scratch editor in one place, making  it easier to manage dependencies and make changes that affect
-multiple packages.
+## 📁 项目结构（摘要）
 
-### Why are there only a few packages in this repo?
+scratch-editor/
+  ├── src/
+  ├── build/
+  ├── package.json
+  ├── README.md  ← 你正在看的文件
+  └── ...
 
-We're migrating packages in stages. The current plan, which is subject to change, has us migrating repositories in
-four batches. We plan to complete the migration within 2025.
+## 🚀 本地开发
 
-### What will happen to the existing repositories?
+1. 克隆项目
 
-The existing repositories will be archived and made read-only. Those repositories contain valuable work and
-information, including but not limited to issues and pull requests. We plan to keep that information available for
-reference, and to selectively migrate it to this new repository.
+```
+git clone https://github.com/IJayHuI/scratch-editor.git
+cd scratch-editor
+```
 
-## Thank you!
+2. 安装依赖
 
-Scratch would not be what it is today without help from the global community of Scratchers and open-source
-contributors. Thank you for your contributions and support. _[Scratch on!](https://scratch.mit.edu/projects/65347738/fullscreen/)_
+```
+npm install
+```
 
-## Donate
+3. 先进行一次构建
+```
+npm run build
+```
 
-We provide [Scratch](https://scratch.mit.edu) free of charge, and want to keep it that way! Please consider making a
-[donation](https://secure.donationpay.org/scratchfoundation/) to support our continued engineering, design, community,
-and resource development efforts. Donations of any size are appreciated. Thank you!
+- 开发模式运行
+
+```
+npm start
+```
+
+- 打包
+
+```
+npm run build
+```
+
+## 📝 Licenses
+
+本项目基于 Scratch（MIT License）进行二次开发，请遵守相关开源协议。
+
+## 🤝 致谢
+
+感谢 Scratch Foundation 开源原始编辑器，使本项目成为可能。
+感谢 Supabase 提供简单易用的 Auth / Database / Storage 服务。
+
+## 📚 官方文档
+
+更多内容请参考本目录下的 [README.SOURCE](README.source.md)
