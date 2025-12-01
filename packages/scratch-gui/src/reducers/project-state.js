@@ -153,9 +153,14 @@ const reducer = function (state, action) {
         }
         return state;
     case DONE_LOADING_VM_WITH_ID:
-        if (state.loadingState === LoadingState.LOADING_VM_WITH_ID) {
+        if (
+            state.loadingState === LoadingState.LOADING_VM_WITH_ID ||
+            state.loadingState === LoadingState.LOADING_VM_FILE_UPLOAD
+        ) {
             return Object.assign({}, state, {
-                loadingState: LoadingState.SHOWING_WITH_ID
+                loadingState: LoadingState.SHOWING_WITH_ID,
+                // 如果action中有projectId，使用它；否则保持原有projectId
+                projectId: action.projectId || state.projectId,
             });
         }
         return state;
@@ -419,31 +424,38 @@ const onFetchedProjectData = (projectData, loadingState) => {
     }
 };
 
-const onLoadedProject = (loadingState, canSave, success) => {
+const onLoadedProject = (loadingState, canSave, success, originalProjectId) => {
     switch (loadingState) {
-    case LoadingState.LOADING_VM_WITH_ID:
-        if (success) {
-            return {type: DONE_LOADING_VM_WITH_ID};
-        }
-        // failed to load project; just keep showing current project
-        return {type: RETURN_TO_SHOWING};
-    case LoadingState.LOADING_VM_FILE_UPLOAD:
-        if (success) {
-            if (canSave) {
-                return {type: DONE_LOADING_VM_TO_SAVE};
+        case LoadingState.LOADING_VM_WITH_ID:
+            if (success) {
+                return { type: DONE_LOADING_VM_WITH_ID };
             }
-            return {type: DONE_LOADING_VM_WITHOUT_ID};
-        }
-        // failed to load project; just keep showing current project
-        return {type: RETURN_TO_SHOWING};
-    case LoadingState.LOADING_VM_NEW_DEFAULT:
-        if (success) {
-            return {type: DONE_LOADING_VM_WITHOUT_ID};
-        }
-        // failed to load default project; show error
-        return {type: START_ERROR};
-    default:
-        return;
+            // failed to load project; just keep showing current project
+            return { type: RETURN_TO_SHOWING };
+        case LoadingState.LOADING_VM_FILE_UPLOAD:
+            if (success) {
+                if (canSave) {
+                    return { type: DONE_LOADING_VM_TO_SAVE };
+                }
+                // 如果有原始项目ID，保留它；否则清除ID
+                if (originalProjectId) {
+                    return {
+                        type: DONE_LOADING_VM_WITH_ID,
+                        projectId: originalProjectId,
+                    };
+                }
+                return { type: DONE_LOADING_VM_WITHOUT_ID };
+            }
+            // failed to load project; just keep showing current project
+            return { type: RETURN_TO_SHOWING };
+        case LoadingState.LOADING_VM_NEW_DEFAULT:
+            if (success) {
+                return { type: DONE_LOADING_VM_WITHOUT_ID };
+            }
+            // failed to load default project; show error
+            return { type: START_ERROR };
+        default:
+            return;
     }
 };
 

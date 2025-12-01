@@ -64,6 +64,7 @@ const SBFileUploaderHOC = function (WrappedComponent) {
         }
         // step 1: this is where the upload process begins
         handleStartSelectingFileUpload () {
+            this.originalProjectId = this.props.projectId;
             this.createFileObjects(); // go to step 2
         }
         // step 2: create a FileReader and an <input> element, and issue a
@@ -241,8 +242,15 @@ const SBFileUploaderHOC = function (WrappedComponent) {
         closeFileMenu: () => dispatch(closeFileMenu()),
         // transition project state from loading to regular, and close
         // loading screen and file menu
-        onLoadingFinished: (loadingState, success) => {
-            dispatch(onLoadedProject(loadingState, ownProps.canSave, success));
+        onLoadingFinished: (loadingState, success, originalProjectId) => {
+            dispatch(
+                onLoadedProject(
+                    loadingState,
+                    ownProps.canSave,
+                    success,
+                    originalProjectId,
+                ),
+            );
             dispatch(closeLoadingProject());
             dispatch(closeFileMenu());
         },
