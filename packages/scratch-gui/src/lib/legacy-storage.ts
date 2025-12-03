@@ -9,7 +9,6 @@ import saveProjectToServer from '../lib/save-project-to-server';
 export class LegacyStorage implements GUIStorage {
     private projectHost?: string;
     private projectToken?: string;
-    private assetHost?: string;
     private backpackHost?: string;
     private translator?: TranslatorFunction;
 
@@ -38,10 +37,6 @@ export class LegacyStorage implements GUIStorage {
         } else {
             unsetMetadata(RequestMetadata.ProjectId);
         }
-    }
-
-    setAssetHost (host: string): void {
-        this.assetHost = host;
     }
 
     setTranslatorFunction (translator: TranslatorFunction): void {
@@ -187,7 +182,7 @@ export class LegacyStorage implements GUIStorage {
     }
 
     private getAssetGetConfig (asset: Asset) {
-        return `${this.assetHost}/internalapi/asset/${asset.assetId}.${asset.dataFormat}/get/`;
+        return `/static/assets/${asset.assetId}.${asset.dataFormat}`;
     }
 
     private getAssetCreateConfig (asset: Asset) {
@@ -196,9 +191,9 @@ export class LegacyStorage implements GUIStorage {
             // should update if there is an assetId, and the asset store uses the
             // assetId as part of the create URI. So, force the method to POST.
             // Then when storage finds this config to use for the "update", still POSTs
-            method: 'post',
-            url: `${this.assetHost}/${asset.assetId}.${asset.dataFormat}`,
-            withCredentials: true
+            method: "post",
+            url: `/static/assets/${asset.assetId}.${asset.dataFormat}`,
+            withCredentials: true,
         };
     }
 
