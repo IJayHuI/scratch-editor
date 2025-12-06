@@ -9,7 +9,6 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    /* For the add backdrop button */
     flex-grow: 1;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-color: $ui-white;
@@ -17,7 +16,46 @@
     border-color: $ui-black-transparent;
     border-width: 1px;
     border-style: solid;
-    border-bottom: 0;
     border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
     transition: all 0.25s ease;
+}
+
+.chat-header {
+    width: 100%;
+    height: 46px;
+    border-color: $ui-black-transparent;
+    border-width: 1px;
+    border-style: solid;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+.chat-list {
+    width: 100%;
+    padding: 8px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.list-welcome {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.chat-sender {
+    width: 100%;
+    padding: 8px;
 }

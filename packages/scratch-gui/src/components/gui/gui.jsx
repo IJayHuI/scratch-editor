@@ -183,8 +183,7 @@ const GUIComponent = props => {
                 isRtl={isRtl}
                 loading={loading}
                 manuallySaveThumbnails={
-                    manuallySaveThumbnails &&
-                    userOwnsProject
+                    manuallySaveThumbnails && userOwnsProject
                 }
                 onUpdateProjectThumbnail={onUpdateProjectThumbnail}
                 stageSize={STAGE_SIZE_MODES.large}
@@ -197,7 +196,7 @@ const GUIComponent = props => {
         ) : (
             <Box
                 className={styles.pageWrapper}
-                dir={isRtl ? 'rtl' : 'ltr'}
+                dir={isRtl ? "rtl" : "ltr"}
                 {...componentProps}
             >
                 {telemetryModalVisible ? (
@@ -211,24 +210,16 @@ const GUIComponent = props => {
                         onShowPrivacyPolicy={onShowPrivacyPolicy}
                     />
                 ) : null}
-                {loading ? (
-                    <Loader />
-                ) : null}
-                {isCreating ? (
-                    <Loader messageId="gui.loader.creating" />
-                ) : null}
-                {isRendererSupported ? null : (
-                    <WebGlModal isRtl={isRtl} />
-                )}
+                {loading ? <Loader /> : null}
+                {isCreating ? <Loader messageId="gui.loader.creating" /> : null}
+                {isRendererSupported ? null : <WebGlModal isRtl={isRtl} />}
                 {tipsLibraryVisible ? (
                     <TipsLibrary
                         hideTutorialProjects={hideTutorialProjects}
                         onTutorialSelect={onTutorialSelect}
                     />
                 ) : null}
-                {cardsVisible ? (
-                    <Cards />
-                ) : null}
+                {cardsVisible ? <Cards /> : null}
                 {alertsVisible ? (
                     <Alerts className={styles.alertsContainer} />
                 ) : null}
@@ -244,10 +235,12 @@ const GUIComponent = props => {
                         onRequestClose={onRequestCloseCostumeLibrary}
                     />
                 ) : null}
-                {<DebugModal
-                    isOpen={debugModalVisible}
-                    onClose={onCloseDebugModal}
-                />}
+                {
+                    <DebugModal
+                        isOpen={debugModalVisible}
+                        onClose={onCloseDebugModal}
+                    />
+                }
                 {backdropLibraryVisible ? (
                     <BackdropLibrary
                         vm={vm}
@@ -314,10 +307,7 @@ const GUIComponent = props => {
                             >
                                 <TabList className={tabClassNames.tabList}>
                                     <Tab className={tabClassNames.tab}>
-                                        <img
-                                            draggable={false}
-                                            src={codeIcon}
-                                        />
+                                        <img draggable={false} src={codeIcon} />
                                         <FormattedMessage
                                             defaultMessage="Code"
                                             description="Button to get to the code panel"
@@ -369,7 +359,7 @@ const GUIComponent = props => {
                                             grow={1}
                                             isVisible={blocksTabVisible}
                                             options={{
-                                                media: `${basePath}static/${themeMap[theme].blocksMediaFolder}/`
+                                                media: `${basePath}static/${themeMap[theme].blocksMediaFolder}/`,
                                             }}
                                             stageSize={stageSize}
                                             theme={theme}
@@ -423,7 +413,11 @@ const GUIComponent = props => {
                                 />
                             </Box>
                         </Box>
-                        {chatPanel ? <Box><ChatPanel /></Box> : null}
+                        {chatPanel ? (
+                            <Box>
+                                <ChatPanel vm={vm} />
+                            </Box>
+                        ) : null}
                     </Box>
                 </Box>
                 <DragLayer />
