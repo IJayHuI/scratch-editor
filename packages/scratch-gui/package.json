@@ -57,7 +57,7 @@
     "watch": "webpack --watch"
   },
   "dependencies": {
-    "@ant-design/x": "^2.0.0",
+    "@ant-design/x": "^2.1.1",
     "@ant-design/x-markdown": "^2.0.1",
     "@mediapipe/face_detection": "0.4.1646425229",
     "@microbit/microbit-universal-hex": "0.2.2",
