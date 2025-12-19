@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useCallback } from "react";
 
-import { Sender, Bubble, Welcome } from "@ant-design/x";
+import { Sender, Welcome, CodeHighlighter } from "@ant-design/x";
 import { XMarkdown } from "@ant-design/x-markdown";
+import ScratchHighlighter from "./scratch-highlighter";
 
 import styles from "./chat-panel.css";
 
@@ -9,42 +10,37 @@ const ChatPanel = (props) => {
     const { inputValue, setInputValue, submitMessage, messages, loading } =
         props;
 
+    const Code = useCallback(({ className, children }) => {
+        const lang = className?.match(/language-(\w+)/)?.[1] || "";
+        if (typeof children !== "string") return null;
+
+        if (lang === "scratch") return <ScratchHighlighter value={children} />;
+        return <CodeHighlighter lang={lang}>{children}</CodeHighlighter>;
+    }, []);
+
     const chatHeader = <div className={styles.chatHeader}></div>;
 
     const chatList = (
         <div className={styles.chatList}>
             {messages.length === 0 ? (
                 <div className={styles.listWelcome}>
-                    <Welcome
-                        variant="borderless"
-                        title={`👋 欢迎使用AI助手`}
-                    />
+                    <Welcome variant="borderless" title={`👋 欢迎使用AI助手`} />
                     <p>我可以帮你学习 Scratch 编程，回答任何问题</p>
                 </div>
             ) : (
-                <div className={styles.listContainer}>
-                    {messages.map((message) => (
-                        <Bubble
-                            shape="corner"
-                            key={message.id}
-                            placement={
-                                message.role === "user" ? "end" : "start"
-                            }
-                            content={
-                                message.role === "user" ? (
-                                    message.content
-                                ) : (
-                                    <XMarkdown content={message.content} />
-                                )
-                            }
-                            typing={
-                                message.role === "assistant" &&
-                                loading &&
-                                message === messages[messages.length - 1]
-                            }
-                        />
-                    ))}
-                </div>
+                messages.map((message) => (
+                    <div key={message.id} className={styles.message}>
+                        {message.role === "user" ? (
+                            message.content
+                        ) : (
+                            <XMarkdown
+                                components={{ code: Code }}
+                                paragraphTag="div"
+                                content={message.content}
+                            />
+                        )}
+                    </div>
+                ))
             )}
         </div>
     );

@@ -1,6 +1,46 @@
 // https://api.deepseek.com/v1/chat/completions
-// sk-924d7c54cd3f4d20941829d7850f6e76
-export const aiChatService = {
+// sk-2067561a163d4af8bc02bfa007d25c2a
+
+// 系统提示词
+const systemPrompt = {
+    role: "system",
+    content: `
+你是 Scratch 编程助手，生成【ScratchBlocks 可直接解析】的 Scratch XML，以及专门帮助用户学习图形化编程和解决问题。
+
+【你的职责】 
+- 提供准确的 Scratch 编程指导  
+- 解释积木块的使用方法  
+- 帮助调试程序错误  
+- 给出创意项目建议  
+- 用简单易懂的语言解释复杂概念  
+
+【必须遵守的规则】
+1. Scratch 积木是【单向顺序链表】
+   - 每个 <block> 内最多只能有一个 <next>
+   - 顺序逻辑必须通过 <next> 逐层嵌套，禁止并列 <next>
+2. <next> 只能出现在 <block> 内，不能与 <block> 并列
+3. <value> / <statement> 内只能包含 <block> 或 <shadow>，不能包含 <next>
+
+【示例结构】
+\`\`\`scratch
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="event_whenflagclicked" x="0" y="0">
+    <next>
+      <block type="motion_movesteps">
+        <value name="STEPS">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+    </next>
+  </block>
+</xml>
+\`\`\`
+`,
+};
+
+const aiChatService = {
     async sendMessage(
         userMessage,
         projectStatus,
@@ -8,25 +48,11 @@ export const aiChatService = {
         onDelta,
     ) {
         try {
-            // 1. 系统提示词
-            const systemPrompt = `你是一个专业的 Scratch 编程助手，专门帮助用户学习图形化编程和解决问题。  
-  
-你的职责：  
-- 提供准确的 Scratch 编程指导  
-- 解释积木块的使用方法  
-- 帮助调试程序错误  
-- 给出创意项目建议  
-- 用简单易懂的语言解释复杂概念  
-  
-请根据用户的具体问题和当前项目状况，提供有针对性的帮助。如果涉及代码操作，请提供详细的步骤说明。`;
-
             // 构建完整的消息数组
-            const apiMessages = [
-                {
-                    role: "system",
-                    content: systemPrompt,
-                },
-            ];
+            const apiMessages = [];
+
+            // 1. 系统提示词
+            apiMessages.push(systemPrompt);
 
             // 2. 添加项目状况信息作为系统消息的一部分
             if (projectStatus) {
@@ -64,7 +90,7 @@ export const aiChatService = {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization:
-                            "Bearer sk-924d7c54cd3f4d20941829d7850f6e76",
+                            "Bearer sk-2067561a163d4af8bc02bfa007d25c2a",
                     },
                     body: JSON.stringify({
                         model: "deepseek-chat",
@@ -98,9 +124,7 @@ export const aiChatService = {
                     if (line.startsWith("data: ")) {
                         const dataStr = line.replace("data: ", "").trim();
 
-                        if (dataStr === "[DONE]") {
-                            return fullText;
-                        }
+                        if (dataStr === "[DONE]") return fullText;
 
                         try {
                             const json = JSON.parse(dataStr);
@@ -123,3 +147,5 @@ export const aiChatService = {
         }
     },
 };
+
+export { aiChatService };
