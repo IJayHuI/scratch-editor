@@ -171,6 +171,7 @@ class Chat extends React.Component {
                 submitMessage={this.submitMessage}
                 messages={this.state.messages}
                 loading={this.state.loading}
+                vm={this.props.vm}
             />
         );
     }

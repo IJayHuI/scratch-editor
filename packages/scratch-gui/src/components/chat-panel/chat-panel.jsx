@@ -7,14 +7,14 @@ import ScratchHighlighter from "./scratch-highlighter";
 import styles from "./chat-panel.css";
 
 const ChatPanel = (props) => {
-    const { inputValue, setInputValue, submitMessage, messages, loading } =
+    const { inputValue, setInputValue, submitMessage, messages, loading, vm } =
         props;
 
     const Code = useCallback(({ className, children }) => {
         const lang = className?.match(/language-(\w+)/)?.[1] || "";
         if (typeof children !== "string") return null;
 
-        if (lang === "scratch") return <ScratchHighlighter value={children} />;
+        if (lang === "scratch") return <ScratchHighlighter value={children} vm={vm} />;
         return <CodeHighlighter lang={lang}>{children}</CodeHighlighter>;
     }, []);
 
