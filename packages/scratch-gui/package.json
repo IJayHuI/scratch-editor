@@ -57,6 +57,7 @@
     "watch": "webpack --watch"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.1.0",
     "@ant-design/x": "^2.1.1",
     "@ant-design/x-markdown": "^2.0.1",
     "@mediapipe/face_detection": "0.4.1646425229",
@@ -69,6 +70,7 @@
     "@tensorflow-models/face-detection": "1.0.3",
     "@tensorflow/tfjs": "4.22.0",
     "@testing-library/user-event": "14.6.1",
+    "antd": "^6.1.1",
     "arraybuffer-loader": "1.0.8",
     "autoprefixer": "9.8.8",
     "balance-text": "3.3.1",
