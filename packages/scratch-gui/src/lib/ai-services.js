@@ -48,6 +48,41 @@ const codePrompt = {
 `,
 };
 
+const projectPrompt = {
+    role: "system",
+    content: `
+【Scratch 多角色 / 项目生成规则】
+
+当需要生成【完整项目】或【多个角色】时，请严格遵守以下规则：
+
+1. 只使用 Scratch【默认角色库】中的角色  
+   - 不要生成或描述自定义图片  
+   - 必须告诉学生：到“选择角色”中搜索对应角色名称
+
+2. 输出结构必须清晰，按【角色】分别说明：
+   - 先列出本项目需要的所有角色
+   - 对每个角色说明：
+     - 角色名称（Scratch 角色库中的名字）
+     - 该角色的作用（一句话）
+     - 该角色对应的 Scratch 积木代码
+
+3. 代码规则：
+   - 每个角色的代码必须【单独输出】
+   - 必须使用 \`\`\`scratch 包裹
+   - 严格遵守 Scratch 积木结构规则（单向 next 链）
+
+4. 输出顺序推荐：
+   ① 项目简介（1~2 句话，适合学生）
+   ② 需要的角色列表（告诉学生去角色库找）
+   ③ 依次给出每个角色的代码
+
+5. 语言风格：
+   - 面向中学生
+   - 简短、清楚、鼓励式
+   - 不一次解释太多概念
+`,
+};
+
 const aiChatService = {
     async sendMessage(
         userMessage,
@@ -62,6 +97,7 @@ const aiChatService = {
             // 1. 系统提示词
             apiMessages.push(systemPrompt);
             apiMessages.push(codePrompt);
+            apiMessages.push(projectPrompt);
 
             // 2. 添加项目状况信息作为系统消息的一部分
             if (projectStatus) {
