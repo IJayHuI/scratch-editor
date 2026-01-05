@@ -1,24 +1,82 @@
 import React, { useCallback } from "react";
-
-import { Sender, Welcome, CodeHighlighter } from "@ant-design/x";
+import { Sender, Welcome, CodeHighlighter, Conversations } from "@ant-design/x";
 import { XMarkdown } from "@ant-design/x-markdown";
 import ScratchHighlighter from "./scratch-highlighter";
+import { Button, Space, Popover, message } from "antd";
+import {
+    CommentOutlined,
+    PlusOutlined,
+    DeleteOutlined,
+} from "@ant-design/icons";
 
 import styles from "./chat-panel.css";
 
 const ChatPanel = (props) => {
-    const { inputValue, setInputValue, submitMessage, messages, loading, vm } =
-        props;
+    const {
+        inputValue,
+        setInputValue,
+        submitMessage,
+        newConversation,
+        conversationClick,
+        messages,
+        loading,
+        vm,
+        sessions,
+        sessionTitle,
+        deleteRecord,
+    } = props;
 
     const Code = useCallback(({ className, children }) => {
         const lang = className?.match(/language-(\w+)/)?.[1] || "";
         if (typeof children !== "string") return null;
 
-        if (lang === "scratch") return <ScratchHighlighter value={children} vm={vm} />;
+        if (lang === "scratch")
+            return <ScratchHighlighter value={children} vm={vm} />;
         return <CodeHighlighter lang={lang}>{children}</CodeHighlighter>;
     }, []);
 
-    const chatHeader = <div className={styles.chatHeader}></div>;
+    const conversationMenuConfig = (conversation) => ({
+        trigger: (
+            <DeleteOutlined
+                onClick={async (e) => {
+                    e.stopPropagation();
+                    await deleteRecord(conversation.key);
+                }}
+            />
+        ),
+        items: []
+    });
+
+    const chatHeader = (
+        <div className={styles.chatHeader}>
+            <p>{sessionTitle}</p>
+            <Space size={0}>
+                <Button
+                    type="text"
+                    icon={<PlusOutlined />}
+                    onClick={() => {
+                        if (messages.length === 0)
+                            message.error("已经是新对话了。");
+                        else newConversation();
+                    }}
+                />
+                <Popover
+                    placement="bottom"
+                    styles={{ container: { padding: 0, maxHeight: 600 } }}
+                    content={
+                        <Conversations
+                            items={sessions}
+                            menu={conversationMenuConfig}
+                            groupable
+                            onActiveChange={conversationClick}
+                        />
+                    }
+                >
+                    <Button type="text" icon={<CommentOutlined />} />
+                </Popover>
+            </Space>
+        </div>
+    );
 
     const chatList = (
         <div className={styles.chatList}>

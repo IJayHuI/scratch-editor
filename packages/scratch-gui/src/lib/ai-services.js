@@ -18,6 +18,7 @@ const systemPrompt = {
 `,
 };
 
+// 代码提示词
 const codePrompt = {
     role: "system",
     content: `
@@ -48,6 +49,7 @@ const codePrompt = {
 `,
 };
 
+// 项目提示词
 const projectPrompt = {
     role: "system",
     content: `

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import ScratchBlocks from "scratch-blocks";
 import adapter from "../../../../scratch-vm/src/engine/adapter";
 import { Button } from "antd";
+import { CaretRightOutlined } from "@ant-design/icons";
 
 import styles from "./scratch-highlighter.css";
 
@@ -102,7 +103,7 @@ const ScratchHighlighter = ({ value, title = "scratch", vm }) => {
     const header = (
         <div className={styles.highlighterHeader}>
             <p className={styles.lang}>{title}</p>
-            <Button variant="text" color="default" onClick={handleExecute}>
+            <Button variant="text" color="default" onClick={handleExecute} icon={<CaretRightOutlined />}>
                 执行
             </Button>
         </div>
