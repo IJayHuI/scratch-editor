@@ -10,7 +10,7 @@ import log from "../lib/log.js";
 import { PLATFORM } from "../lib/platform.js";
 
 const onClickLogo = () => {
-    window.location = "https://scratch.mit.edu";
+    window.location = "https://blockcode.com.cn";
 };
 
 const handleTelemetryModalCancel = () => {

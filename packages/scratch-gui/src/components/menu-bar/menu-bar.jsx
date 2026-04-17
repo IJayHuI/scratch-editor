@@ -76,7 +76,7 @@ import aboutIcon from './icon--about.svg';
 import fileIcon from './icon--file.svg';
 import editIcon from './icon--edit.svg';
 
-import scratchLogo from './scratch-logo.svg';
+import scratchLogo from './blockcode-logo.svg';
 import scratchLogoAndroid from './scratch-logo-android.svg';
 import ninetiesLogo from './nineties_logo.svg';
 import catLogo from './cat_logo.svg';

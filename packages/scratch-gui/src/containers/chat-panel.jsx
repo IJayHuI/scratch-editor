@@ -121,7 +121,7 @@ class Chat extends React.Component {
         } finally {
             await uploadRecord(
                 this.props.sessionId,
-                this.props.messages.slice(-30),
+                this.props.messages.slice(-100),
             ) // 只保存最近30条消息
                 .then((res) => {
                     if (!this.props.sessionId) {
